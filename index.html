@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Issue Tracker</title>
-<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="https://accounts.google.com/gsi/client" onload="initGoogleAuth()" async defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -1019,7 +1019,6 @@
 
   function handleSyncBtn() {
     if (gdAccessToken) {
-      // Disconnect
       gdAccessToken = null; gdFolderId = null; gdFileId = null; gdMetaFileId = null;
       localStorage.removeItem('gd_access_token');
       localStorage.removeItem('gd_folder_id');
@@ -1027,7 +1026,8 @@
       localStorage.removeItem('gd_meta_file_id');
       setSyncStatus('', 'Not connected to Google Drive');
     } else {
-      gdTokenClient.requestAccessToken({ prompt: '' });
+      // Use prompt:'select_account' to force account chooser and prevent instant close
+      gdTokenClient.requestAccessToken({ prompt: 'select_account' });
     }
   }
 
@@ -1290,8 +1290,7 @@
     pushToGDrive();
   }
 
-  // Start Google Auth after page loads
-  window.addEventListener('load', initGoogleAuth);
+  // initGoogleAuth is called via onload on the script tag above
 
   /* ── BOOT ── */
   document.getElementById('f-date').value = today();
