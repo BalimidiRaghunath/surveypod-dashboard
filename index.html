@@ -20,89 +20,157 @@
     --success: #34c27a;
     --warning: #f0a050;
     --danger: #e05555;
+    --hw: #7c5cbf;                                                                  
+    --sw: #4f8ef7;
+    --nw: #34c27a;
+    --pw: #f0a050;
+    --ot: #8b90a0;
     --radius: 10px;
     --radius-lg: 14px;
   }
+
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; font-size: 14px; line-height: 1.6; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* LAYOUT */
   .app { display: flex; min-height: 100vh; }
 
   /* SIDEBAR */
-  .sidebar { width: 220px; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; z-index: 10; }
-  .sidebar-logo { padding: 24px 20px 20px; border-bottom: 1px solid var(--border); }
-  .logo-mark { display: flex; align-items: center; gap: 10px; }
-  .logo-icon { width: 32px; height: 32px; background: linear-gradient(135deg, var(--accent), var(--accent2)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 15px; }
+  .sidebar {
+    width: 220px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    z-index: 10;
+  }
+  .sidebar-logo {
+    padding: 24px 20px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .logo-mark {
+    display: flex; align-items: center; gap: 10px;
+  }
+  .logo-icon {
+    width: 32px; height: 32px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px;
+  }
   .logo-text { font-size: 15px; font-weight: 600; letter-spacing: -0.2px; }
   .logo-sub { font-size: 11px; color: var(--text3); margin-top: 1px; font-family: 'DM Mono', monospace; }
-  .sidebar-stats { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; gap: 8px; }
+
+  .sidebar-stats {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex; flex-direction: column; gap: 8px;
+  }
   .stat-row { display: flex; justify-content: space-between; align-items: center; }
   .stat-label { font-size: 12px; color: var(--text2); }
   .stat-val { font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 500; }
   .stat-val.total { color: var(--text); }
   .stat-val.open { color: var(--warning); }
   .stat-val.resolved { color: var(--success); }
-  .sidebar-nav { padding: 12px; flex: 1; display: flex; flex-direction: column; gap: 2px; }
-  .nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: var(--radius); cursor: pointer; color: var(--text2); font-size: 13px; font-weight: 400; border: none; background: transparent; width: 100%; text-align: left; transition: all 0.15s; }
+
+  .sidebar-nav { padding: 12px 12px; flex: 1; display: flex; flex-direction: column; gap: 2px; }
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 10px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    color: var(--text2);
+    font-size: 13px;
+    font-weight: 400;
+    border: none; background: transparent; width: 100%; text-align: left;
+    transition: all 0.15s;
+  }
   .nav-item:hover { background: var(--surface2); color: var(--text); }
   .nav-item.active { background: rgba(79,142,247,0.12); color: var(--accent); font-weight: 500; }
   .nav-icon { font-size: 15px; width: 20px; text-align: center; }
-  .sidebar-footer { padding: 12px 20px; border-top: 1px solid var(--border); font-size: 11px; color: var(--text3); font-family: 'DM Mono', monospace; }
+
+  .sidebar-footer {
+    padding: 12px 20px;
+    border-top: 1px solid var(--border);
+    font-size: 11px;
+    color: var(--text3);
+    font-family: 'DM Mono', monospace;
+  }
 
   /* MAIN */
   .main { margin-left: 220px; flex: 1; padding: 32px 36px; max-width: 1000px; }
+
   .page { display: none; }
   .page.active { display: block; animation: fadeIn 0.2s ease; }
   @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
   .page-header { margin-bottom: 28px; }
   .page-title { font-size: 22px; font-weight: 600; letter-spacing: -0.4px; }
   .page-sub { font-size: 13px; color: var(--text2); margin-top: 4px; }
 
   /* FORM */
-  .form-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; }
+  .form-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+  }
   .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
   .form-group { display: flex; flex-direction: column; gap: 6px; }
   .form-group.full { grid-column: 1 / -1; }
   .form-group label { font-size: 12px; color: var(--text2); font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; }
-  .form-group input, .form-group select, .form-group textarea {
-    background: var(--surface2); border: 1px solid var(--border2); border-radius: var(--radius);
-    padding: 9px 12px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 13px; outline: none; transition: border-color 0.15s;
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius);
+    padding: 9px 12px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.15s;
   }
-  .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--accent); }
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus { border-color: var(--accent); }
   .form-group select option { background: var(--surface2); }
   .form-group textarea { min-height: 80px; resize: vertical; }
+
   .form-actions { margin-top: 20px; display: flex; gap: 10px; align-items: center; }
 
-  /* ISSUE TYPE ROW */
-  .issue-type-row { display: flex; gap: 8px; align-items: center; }
-  .issue-type-row select { flex: 1; }
-  .btn-add-type { padding: 9px 14px; border-radius: var(--radius); border: 1px dashed var(--border2); background: transparent; color: var(--text2); font-family: 'DM Sans', sans-serif; font-size: 13px; cursor: pointer; white-space: nowrap; transition: all 0.15s; }
-  .btn-add-type:hover { border-color: var(--accent); color: var(--accent); background: rgba(79,142,247,0.06); }
-
-  /* CUSTOM TYPE MODAL */
-  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 100; display: flex; align-items: center; justify-content: center; display: none; }
-  .modal-overlay.show { display: flex; }
-  .modal { background: var(--surface); border: 1px solid var(--border2); border-radius: var(--radius-lg); padding: 24px; width: 340px; }
-  .modal-title { font-size: 15px; font-weight: 600; margin-bottom: 16px; }
-  .modal-body { display: flex; flex-direction: column; gap: 12px; }
-  .modal-body input { background: var(--surface2); border: 1px solid var(--border2); border-radius: var(--radius); padding: 9px 12px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 13px; outline: none; }
-  .modal-body input:focus { border-color: var(--accent); }
-  .modal-actions { display: flex; gap: 10px; margin-top: 16px; }
-  .custom-types-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
-  .custom-type-chip { display: flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; background: rgba(79,142,247,0.1); border: 1px solid rgba(79,142,247,0.2); font-size: 12px; color: var(--accent); }
-  .custom-type-chip button { background: none; border: none; color: var(--text3); cursor: pointer; font-size: 13px; line-height: 1; padding: 0; }
-  .custom-type-chip button:hover { color: var(--danger); }
-
-  /* BUTTONS */
-  .btn { padding: 9px 18px; border-radius: var(--radius); border: 1px solid var(--border2); background: transparent; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.15s; }
-  .btn:hover { background: var(--surface2); }
-  .btn-primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .btn {
+    padding: 9px 18px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border2);
+    background: transparent;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn:hover { background: var(--surface2); border-color: var(--border2); }
+  .btn-primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
   .btn-primary:hover { background: #3d7de8; border-color: #3d7de8; }
-  .btn-success { background: rgba(52,194,122,0.15); border-color: rgba(52,194,122,0.3); color: var(--success); }
-  .btn-success:hover { background: rgba(52,194,122,0.25); }
   .btn-danger { color: var(--danger); border-color: rgba(224,85,85,0.3); }
   .btn-danger:hover { background: rgba(224,85,85,0.1); }
-  .btn-edit { color: var(--accent); border-color: rgba(79,142,247,0.3); }
-  .btn-edit:hover { background: rgba(79,142,247,0.08); }
   .btn-sm { padding: 5px 12px; font-size: 12px; }
 
   /* ALERT */
@@ -118,31 +186,24 @@
   .search-bar select option { background: var(--surface); }
 
   /* RESULT CARDS */
-  .result-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px 20px; margin-bottom: 12px; transition: border-color 0.15s; }
+  .result-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 16px 20px;
+    margin-bottom: 12px;
+    transition: border-color 0.15s;
+  }
   .result-card:hover { border-color: var(--border2); }
   .rc-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
   .rc-device { font-size: 15px; font-weight: 600; font-family: 'DM Mono', monospace; color: var(--text); }
   .rc-badges { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
-  .rc-actions { display: flex; gap: 6px; margin-top: 12px; }
-
-  /* INLINE EDIT FORM inside result card */
-  .edit-form { margin-top: 14px; border-top: 1px solid var(--border); padding-top: 14px; display: none; }
-  .edit-form.open { display: block; }
-  .edit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
-  .edit-group { display: flex; flex-direction: column; gap: 5px; }
-  .edit-group.full { grid-column: 1/-1; }
-  .edit-group label { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.05em; }
-  .edit-group input, .edit-group select, .edit-group textarea {
-    background: var(--surface2); border: 1px solid var(--border2); border-radius: var(--radius);
-    padding: 8px 10px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 13px; outline: none;
+  .badge {
+    font-size: 11px; font-weight: 500;
+    padding: 3px 10px;
+    border-radius: 999px;
+    letter-spacing: 0.03em;
   }
-  .edit-group input:focus, .edit-group select:focus, .edit-group textarea:focus { border-color: var(--accent); }
-  .edit-group select option { background: var(--surface2); }
-  .edit-group textarea { min-height: 65px; resize: vertical; }
-  .edit-actions { display: flex; gap: 8px; }
-
-  /* BADGES */
-  .badge { font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 999px; letter-spacing: 0.03em; }
   .badge-hw { background: rgba(124,92,191,0.15); color: #a98fdc; border: 1px solid rgba(124,92,191,0.25); }
   .badge-sw { background: rgba(79,142,247,0.15); color: #82b0f8; border: 1px solid rgba(79,142,247,0.25); }
   .badge-nw { background: rgba(52,194,122,0.15); color: #6dd8a0; border: 1px solid rgba(52,194,122,0.25); }
@@ -157,7 +218,6 @@
   .rc-divider { border: none; border-top: 1px solid var(--border); margin: 10px 0; }
   .rc-detail { font-size: 13px; color: var(--text2); margin-bottom: 6px; }
   .rc-detail strong { color: var(--text3); font-weight: 500; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 2px; }
-  .no-resolution { font-size: 12px; color: var(--text3); font-style: italic; }
 
   /* TABLE */
   .table-wrap { overflow-x: auto; border-radius: var(--radius-lg); border: 1px solid var(--border); }
@@ -168,17 +228,7 @@
   tbody tr:last-child td { border-bottom: none; }
   tbody tr:hover td { background: rgba(255,255,255,0.02); }
   td.device-col { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--text); font-weight: 500; }
-  td.issue-col { max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-
-  /* INLINE TABLE EDIT ROW */
-  .edit-row td { background: var(--surface2); padding: 10px 8px; }
-  .edit-row input, .edit-row select, .edit-row textarea {
-    width: 100%; background: var(--surface); border: 1px solid var(--border2); border-radius: 6px;
-    padding: 5px 8px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 12px; outline: none;
-  }
-  .edit-row textarea { min-height: 52px; resize: vertical; }
-  .edit-row input:focus, .edit-row select:focus, .edit-row textarea:focus { border-color: var(--accent); }
-  .edit-row select option { background: var(--surface); }
+  td.issue-col { max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
   .filter-bar { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
   .filter-bar input { flex: 2; min-width: 150px; background: var(--surface); border: 1px solid var(--border2); border-radius: var(--radius); padding: 8px 12px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 13px; outline: none; }
@@ -192,53 +242,46 @@
 
   /* EXPORT */
   .export-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-  .export-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px 20px; text-align: center; transition: border-color 0.15s, background 0.15s; cursor: pointer; }
+  .export-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 24px 20px;
+    text-align: center;
+    transition: border-color 0.15s, background 0.15s;
+    cursor: pointer;
+  }
   .export-card:hover { border-color: var(--border2); background: var(--surface2); }
   .export-card .ec-icon { font-size: 28px; margin-bottom: 12px; }
   .export-card .ec-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
   .export-card .ec-desc { font-size: 12px; color: var(--text2); margin-bottom: 16px; line-height: 1.5; }
 
-  /* GROUPED */
+  /* GROUPED SEARCH */
   .group-block { margin-bottom: 16px; border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
   .group-head { background: var(--surface2); padding: 10px 16px; display: flex; justify-content: space-between; align-items: center; }
   .group-head-left { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 500; }
   .group-count { font-size: 12px; color: var(--text2); font-family: 'DM Mono', monospace; }
-  .group-row { display: grid; grid-template-columns: 150px 1fr 1fr auto; gap: 12px; padding: 10px 16px; border-top: 1px solid var(--border); font-size: 13px; align-items: center; }
+  .group-row {
+    display: grid; grid-template-columns: 150px 1fr 1fr auto;
+    gap: 12px; padding: 10px 16px;
+    border-top: 1px solid var(--border);
+    font-size: 13px; align-items: center;
+  }
   .group-row:hover { background: rgba(255,255,255,0.02); }
   .group-row .dev { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--text); font-weight: 500; }
   .group-row .dt { color: var(--text3); font-size: 12px; }
   .group-row .cl { color: var(--text2); }
 
-  /* AUTH MODAL */
-  .auth-modal { background: var(--surface); border: 1px solid var(--border2); border-radius: var(--radius-lg); padding: 28px 24px; width: 340px; }
-  .auth-modal-icon { font-size: 28px; text-align: center; margin-bottom: 10px; }
-  .auth-modal-title { font-size: 16px; font-weight: 600; margin-bottom: 4px; text-align: center; }
-  .auth-modal-sub { font-size: 12px; color: var(--text2); text-align: center; margin-bottom: 18px; }
-  .auth-input-wrap { position: relative; }
-  .auth-input-wrap input { width: 100%; background: var(--surface2); border: 1px solid var(--border2); border-radius: var(--radius); padding: 10px 40px 10px 12px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 13px; outline: none; }
-  .auth-input-wrap input:focus { border-color: var(--accent); }
-  .auth-toggle-eye { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--text3); font-size: 15px; padding: 0; }
-  .auth-toggle-eye:hover { color: var(--text2); }
-  .auth-error { font-size: 12px; color: var(--danger); margin-top: 6px; min-height: 18px; }
-  .auth-actions { display: flex; gap: 10px; margin-top: 18px; }
-
-  /* TYPE MODAL LIST */
-  .type-list-item { display: flex; align-items: center; justify-content: space-between; padding: 7px 10px; border-radius: var(--radius); background: var(--surface2); border: 1px solid var(--border); font-size: 13px; color: var(--text); margin-bottom: 6px; }
-  .type-list-item .type-name { flex: 1; }
-  .type-list-item .type-category { font-size: 11px; color: var(--text3); margin-left: 6px; font-family: 'DM Mono', monospace; }
-  .type-delete-btn { background: none; border: 1px solid rgba(224,85,85,0.3); border-radius: 6px; color: var(--danger); cursor: pointer; font-size: 11px; padding: 3px 9px; font-family: 'DM Sans', sans-serif; transition: all 0.15s; }
-  .type-delete-btn:hover { background: rgba(224,85,85,0.1); }
-  .base-type-label { font-size: 11px; color: var(--text3); font-style: italic; margin-left: 6px; }
-
+  /* SCROLLBAR */
   ::-webkit-scrollbar { width: 6px; height: 6px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
 
   @media (max-width: 768px) {
-    .sidebar { width: 100%; height: auto; position: relative; }
+    .sidebar { width: 100%; height: auto; position: relative; flex-direction: row; flex-wrap: wrap; }
     .main { margin-left: 0; padding: 20px; }
-    .form-grid, .edit-grid { grid-template-columns: 1fr; }
-    .form-group.full, .edit-group.full { grid-column: 1; }
+    .form-grid { grid-template-columns: 1fr; }
+    .form-group.full { grid-column: 1; }
     .export-grid { grid-template-columns: 1fr; }
   }
 </style>
@@ -263,12 +306,24 @@
       <div class="stat-row"><span class="stat-label">Resolved</span><span class="stat-val resolved" id="s-resolved">0</span></div>
     </div>
     <nav class="sidebar-nav">
-      <button class="nav-item active" onclick="showPage('add')" id="nav-add"><span class="nav-icon">＋</span> Add issue</button>
-      <button class="nav-item" onclick="showPage('searchId')" id="nav-searchId"><span class="nav-icon">⊡</span> Search by device</button>
-      <button class="nav-item" onclick="showPage('searchClient')" id="nav-searchClient"><span class="nav-icon">👤</span> Search by client</button>
-      <button class="nav-item" onclick="showPage('searchIssue')" id="nav-searchIssue"><span class="nav-icon">🔍</span> Search by issue</button>
-      <button class="nav-item" onclick="showPage('all')" id="nav-all"><span class="nav-icon">☰</span> All issues</button>
-      <button class="nav-item" onclick="showPage('export')" id="nav-export"><span class="nav-icon">↓</span> Export</button>
+      <button class="nav-item active" onclick="showPage('add')" id="nav-add">
+        <span class="nav-icon">＋</span> Add issue
+      </button>
+      <button class="nav-item" onclick="showPage('searchId')" id="nav-searchId">
+        <span class="nav-icon">⊡</span> Search by device
+      </button>
+      <button class="nav-item" onclick="showPage('searchClient')" id="nav-searchClient">
+        <span class="nav-icon">👤</span> Search by client
+      </button>
+      <button class="nav-item" onclick="showPage('searchIssue')" id="nav-searchIssue">
+        <span class="nav-icon">🔍</span> Search by issue
+      </button>
+      <button class="nav-item" onclick="showPage('all')" id="nav-all">
+        <span class="nav-icon">☰</span> All issues
+      </button>
+      <button class="nav-item" onclick="showPage('export')" id="nav-export">
+        <span class="nav-icon">↓</span> Export
+      </button>
     </nav>
     <div class="sidebar-footer">data stored locally</div>
   </aside>
@@ -306,18 +361,21 @@
           </div>
           <div class="form-group full">
             <label>Issue type</label>
-            <div class="issue-type-row">
-              <select id="f-issueType"></select>
-              <button class="btn-add-type" onclick="openTypeModal()">＋ Add custom type</button>
-            </div>
+            <select id="f-issueType">
+              <option value="Hardware">Hardware</option>
+              <option value="Software">Software</option>
+              <option value="Network">Network</option>
+              <option value="Power">Power</option>
+              <option value="Other">Other</option>
+            </select>
           </div>
           <div class="form-group full">
             <label>Issue reported</label>
-            <textarea id="f-issue" placeholder="Describe the issue..."></textarea>
+            <textarea id="f-issue" placeholder="Describe the issue in detail..."></textarea>
           </div>
           <div class="form-group full">
-            <label>Resolution <span style="color:var(--text3);font-size:11px;font-weight:400;text-transform:none;">(optional — add later)</span></label>
-            <textarea id="f-resolution" placeholder="Leave blank if not resolved yet..."></textarea>
+            <label>Resolution</label>
+            <textarea id="f-resolution" placeholder="Describe the resolution (leave blank if unresolved)..."></textarea>
           </div>
         </div>
         <div class="form-actions">
@@ -331,7 +389,7 @@
     <div class="page" id="page-searchId">
       <div class="page-header">
         <div class="page-title">Search by device ID</div>
-        <div class="page-sub">Find and edit issues for a specific device</div>
+        <div class="page-sub">Find all issues for a specific device</div>
       </div>
       <div class="search-bar">
         <input type="text" id="inp-searchId" placeholder="Type device ID..." oninput="searchById()">
@@ -343,7 +401,7 @@
     <div class="page" id="page-searchClient">
       <div class="page-header">
         <div class="page-title">Search by client</div>
-        <div class="page-sub">Find and edit issues reported by a client</div>
+        <div class="page-sub">Find all issues reported by a client</div>
       </div>
       <div class="search-bar">
         <input type="text" id="inp-searchClient" placeholder="Type client name..." oninput="searchByClient()">
@@ -355,10 +413,17 @@
     <div class="page" id="page-searchIssue">
       <div class="page-header">
         <div class="page-title">Search by issue</div>
-        <div class="page-sub">Find and edit issues by type or keyword</div>
+        <div class="page-sub">Find all devices with a specific issue type or keyword</div>
       </div>
       <div class="search-bar">
-        <select id="inp-issueType" onchange="searchByIssue()"></select>
+        <select id="inp-issueType" onchange="searchByIssue()">
+          <option value="">All issue types</option>
+          <option value="Hardware">Hardware</option>
+          <option value="Software">Software</option>
+          <option value="Network">Network</option>
+          <option value="Power">Power</option>
+          <option value="Other">Other</option>
+        </select>
         <input type="text" id="inp-issueText" placeholder="Search issue description..." oninput="searchByIssue()">
       </div>
       <div id="res-searchIssue"></div>
@@ -368,7 +433,7 @@
     <div class="page" id="page-all">
       <div class="page-header">
         <div class="page-title">All issues</div>
-        <div class="page-sub">View, edit, filter and manage all logged issues</div>
+        <div class="page-sub">View, filter and manage all logged issues</div>
       </div>
       <div class="filter-bar">
         <input type="text" id="f-filterText" placeholder="Filter by device, client, issue..." oninput="renderAll()">
@@ -377,7 +442,14 @@
           <option value="Open">Open</option>
           <option value="Resolved">Resolved</option>
         </select>
-        <select id="f-filterType" onchange="renderAll()"></select>
+        <select id="f-filterType" onchange="renderAll()">
+          <option value="">All types</option>
+          <option value="Hardware">Hardware</option>
+          <option value="Software">Software</option>
+          <option value="Network">Network</option>
+          <option value="Power">Power</option>
+          <option value="Other">Other</option>
+        </select>
       </div>
       <div id="all-table-wrap"></div>
     </div>
@@ -392,7 +464,7 @@
         <div class="export-card" onclick="exportCSV()">
           <div class="ec-icon">📊</div>
           <div class="ec-title">CSV / Excel</div>
-          <div class="ec-desc">Download as .csv — open in Excel or Google Sheets</div>
+          <div class="ec-desc">Download as .csv — open directly in Excel or Google Sheets</div>
           <button class="btn btn-primary btn-sm">Download CSV</button>
         </div>
         <div class="export-card" onclick="exportPDF()">
@@ -404,13 +476,13 @@
         <div class="export-card" onclick="exportJSON()">
           <div class="ec-icon">💾</div>
           <div class="ec-title">JSON backup</div>
-          <div class="ec-desc">Full backup — use to restore your data later</div>
+          <div class="ec-desc">Download a full backup — use to restore your data later</div>
           <button class="btn btn-primary btn-sm">Download JSON</button>
         </div>
       </div>
-      <div style="margin-top:24px;padding:16px 20px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);">
-        <div style="font-size:13px;font-weight:500;margin-bottom:8px;">Restore from JSON backup</div>
-        <div style="font-size:12px;color:var(--text2);margin-bottom:12px;">Load a previously saved JSON backup to restore your data.</div>
+      <div style="margin-top: 24px; padding: 16px 20px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg);">
+        <div style="font-size: 13px; font-weight: 500; margin-bottom: 8px;">Restore from JSON backup</div>
+        <div style="font-size: 12px; color: var(--text2); margin-bottom: 12px;">Load a previously saved JSON backup to restore your data.</div>
         <input type="file" id="restoreFile" accept=".json" style="display:none" onchange="restoreJSON()">
         <button class="btn btn-sm" onclick="document.getElementById('restoreFile').click()">Choose JSON file</button>
       </div>
@@ -419,266 +491,90 @@
   </main>
 </div>
 
-<!-- CUSTOM TYPE MODAL -->
-<div class="modal-overlay" id="typeModal">
-  <div class="modal">
-    <div class="modal-title">Manage issue types</div>
-    <div class="modal-body">
-      <div style="font-size:12px;color:var(--text2);margin-bottom:4px;">Add new type</div>
-      <input type="text" id="newTypeName" placeholder="e.g. Mechanical, Firmware..." onkeydown="if(event.key==='Enter')addCustomType()">
-      <div id="customTypesList" class="custom-types-list" style="max-height:260px;overflow-y:auto;display:flex;flex-direction:column;gap:0;margin-top:12px;"></div>
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-primary" onclick="addCustomType()">Add type</button>
-      <button class="btn" onclick="closeTypeModal()">Done</button>
-    </div>
-  </div>
-</div>
-
-<!-- AUTH MODAL -->
-<div class="modal-overlay" id="authModal">
-  <div class="auth-modal">
-    <div class="auth-modal-icon">🔐</div>
-    <div class="auth-modal-title" id="authModalTitle">Admin Authentication</div>
-    <div class="auth-modal-sub" id="authModalSub">Enter the admin password to continue.</div>
-    <div class="auth-input-wrap">
-      <input type="password" id="authPasswordInput" placeholder="Enter password..." onkeydown="if(event.key==='Enter')submitAuth()">
-      <button class="auth-toggle-eye" onclick="toggleAuthEye()" id="authEyeBtn" title="Show/hide password">👁</button>
-    </div>
-    <div class="auth-error" id="authError"></div>
-    <div class="auth-actions">
-      <button class="btn btn-primary" style="flex:1" onclick="submitAuth()">Confirm</button>
-      <button class="btn" style="flex:1" onclick="cancelAuth()">Cancel</button>
-    </div>
-  </div>
-</div>
-
 <script>
-  const STORAGE_KEY    = 'issuetracker_data';
-  const TYPES_KEY      = 'issuetracker_types';
-  const HIDDEN_KEY     = 'issuetracker_hidden_base';
-  const BASE_TYPES     = ['Hardware','Software','Network','Power','Other'];
-  const ADMIN_PASS     = 'admin123';
+  const STORAGE_KEY = 'issuetracker_data';
   let issues = [];
-  let customTypes = [];
-  let hiddenBaseTypes = [];
 
-  /* ── AUTH SYSTEM ── */
-  let _authCallback = null;
-  let _authCancelCallback = null;
-
-  function requireAuth(title, sub, onSuccess, onCancel) {
-    _authCallback = onSuccess;
-    _authCancelCallback = onCancel || null;
-    document.getElementById('authModalTitle').textContent = title || 'Admin Authentication';
-    document.getElementById('authModalSub').textContent = sub || 'Enter the admin password to continue.';
-    document.getElementById('authPasswordInput').value = '';
-    document.getElementById('authError').textContent = '';
-    document.getElementById('authPasswordInput').type = 'password';
-    document.getElementById('authEyeBtn').textContent = '👁';
-    document.getElementById('authModal').classList.add('show');
-    setTimeout(()=>document.getElementById('authPasswordInput').focus(), 100);
-  }
-
-  function submitAuth() {
-    const val = document.getElementById('authPasswordInput').value;
-    if (val === ADMIN_PASS) {
-      document.getElementById('authModal').classList.remove('show');
-      document.getElementById('authPasswordInput').value = '';
-      document.getElementById('authError').textContent = '';
-      if (_authCallback) { const cb = _authCallback; _authCallback = null; cb(); }
-    } else {
-      document.getElementById('authError').textContent = '✕ Incorrect password. Please try again.';
-      document.getElementById('authPasswordInput').value = '';
-      document.getElementById('authPasswordInput').focus();
-    }
-  }
-
-  function cancelAuth() {
-    document.getElementById('authModal').classList.remove('show');
-    document.getElementById('authPasswordInput').value = '';
-    document.getElementById('authError').textContent = '';
-    if (_authCancelCallback) { const cb = _authCancelCallback; _authCancelCallback = null; cb(); }
-    _authCallback = null;
-  }
-
-  function toggleAuthEye() {
-    const inp = document.getElementById('authPasswordInput');
-    const btn = document.getElementById('authEyeBtn');
-    if (inp.type === 'password') { inp.type = 'text'; btn.textContent = '🙈'; }
-    else { inp.type = 'password'; btn.textContent = '👁'; }
-  }
-
-  /* ── INIT ── */
+  // LOAD
   function loadData() {
-    try { const r = localStorage.getItem(STORAGE_KEY); if (r) issues = JSON.parse(r); } catch(e) { issues=[]; }
-    try { const r = localStorage.getItem(TYPES_KEY);   if (r) customTypes = JSON.parse(r); } catch(e) { customTypes=[]; }
-    try { const r = localStorage.getItem(HIDDEN_KEY);  if (r) hiddenBaseTypes = JSON.parse(r); } catch(e) { hiddenBaseTypes=[]; }
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) issues = JSON.parse(raw);
+    } catch(e) { issues = []; }
     updateStats();
-    refreshTypeSelects();
   }
-  function saveData() { localStorage.setItem(STORAGE_KEY, JSON.stringify(issues)); updateStats(); }
-  function saveTypes() { localStorage.setItem(TYPES_KEY, JSON.stringify(customTypes)); }
-  function saveHiddenBaseTypes() { localStorage.setItem(HIDDEN_KEY, JSON.stringify(hiddenBaseTypes)); }
-  function allTypes() { return [...BASE_TYPES.filter(t=>!hiddenBaseTypes.includes(t)), ...customTypes]; }
 
+  // SAVE
+  function saveData() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(issues));
+    updateStats();
+  }
+
+  // STATS
   function updateStats() {
     document.getElementById('s-total').textContent = issues.length;
-    document.getElementById('s-open').textContent = issues.filter(i=>i.status==='Open').length;
-    document.getElementById('s-resolved').textContent = issues.filter(i=>i.status==='Resolved').length;
+    document.getElementById('s-open').textContent = issues.filter(i => i.status === 'Open').length;
+    document.getElementById('s-resolved').textContent = issues.filter(i => i.status === 'Resolved').length;
   }
 
-  /* ── TYPE SELECTS ── */
-  function refreshTypeSelects() {
-    const types = allTypes();
-    const selects = ['f-issueType','f-filterType'];
-    selects.forEach(id => {
-      const el = document.getElementById(id);
-      if (!el) return;
-      const cur = el.value;
-      el.innerHTML = (id==='f-filterType' ? '<option value="">All types</option>' : '') +
-        types.map(t => `<option value="${esc(t)}">${esc(t)}</option>`).join('');
-      if (cur) el.value = cur;
-    });
-    // search issue type select
-    const si = document.getElementById('inp-issueType');
-    if (si) {
-      const cur = si.value;
-      si.innerHTML = '<option value="">All issue types</option>' + types.map(t=>`<option value="${esc(t)}">${esc(t)}</option>`).join('');
-      if (cur) si.value = cur;
-    }
-    renderCustomTypeChips();
-  }
-
-  /* ── CUSTOM TYPE MODAL ── */
-  function openTypeModal() {
-    document.getElementById('typeModal').classList.add('show');
-    renderCustomTypeChips();
-  }
-  function closeTypeModal() {
-    document.getElementById('typeModal').classList.remove('show');
-    document.getElementById('newTypeName').value = '';
-  }
-  function addCustomType() {
-    const val = document.getElementById('newTypeName').value.trim();
-    if (!val) return;
-    if (allTypes().map(t=>t.toLowerCase()).includes(val.toLowerCase())) {
-      alert('This type already exists.'); return;
-    }
-    customTypes.push(val);
-    saveTypes();
-    refreshTypeSelects();
-    document.getElementById('newTypeName').value = '';
-  }
-  function removeCustomType(t) {
-    requireAuth(
-      '🔐 Delete Issue Type',
-      `Enter the admin password to delete the type "${t}".`,
-      () => {
-        customTypes = customTypes.filter(c=>c!==t);
-        saveTypes();
-        refreshTypeSelects();
-      }
-    );
-  }
-
-  function removeBaseType(t) {
-    requireAuth(
-      '🔐 Delete Issue Type',
-      `Enter the admin password to delete the built-in type "${t}".`,
-      () => {
-        // We handle base type removal by tracking hidden base types
-        hiddenBaseTypes.push(t);
-        saveHiddenBaseTypes();
-        refreshTypeSelects();
-      }
-    );
-  }
-
-  function renderCustomTypeChips() {
-    const el = document.getElementById('customTypesList');
-    const visibleBase = BASE_TYPES.filter(t=>!hiddenBaseTypes.includes(t));
-    const allVisible = [...visibleBase, ...customTypes];
-    if (!allVisible.length) { el.innerHTML = '<span style="font-size:12px;color:var(--text3)">No issue types available</span>'; return; }
-
-    let html = '<div style="font-size:11px;color:var(--text3);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em;">All Issue Types</div>';
-    html += visibleBase.map(t=>`
-      <div class="type-list-item">
-        <span class="type-name">${esc(t)}</span>
-        <span class="base-type-label">built-in</span>
-        <button class="type-delete-btn" onclick="removeBaseType('${esc(t)}')">Delete</button>
-      </div>
-    `).join('');
-    if (customTypes.length) {
-      html += customTypes.map(t=>`
-        <div class="type-list-item">
-          <span class="type-name">${esc(t)}</span>
-          <span class="base-type-label">custom</span>
-          <button class="type-delete-btn" onclick="removeCustomType('${esc(t)}')">Delete</button>
-        </div>
-      `).join('');
-    }
-    el.innerHTML = html;
-  }
-
-  /* ── NAV ── */
+  // NAV
   function showPage(name) {
-    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-    document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-    document.getElementById('page-'+name).classList.add('active');
-    document.getElementById('nav-'+name).classList.add('active');
-    if (name==='all') renderAll();
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('page-' + name).classList.add('active');
+    document.getElementById('nav-' + name).classList.add('active');
+    if (name === 'all') renderAll();
   }
 
-  /* ── ALERT ── */
+  // ALERT
   function showAlert(id, msg, type) {
     const el = document.getElementById(id);
-    el.textContent = msg; el.className='alert show alert-'+type;
-    setTimeout(()=>{ el.className='alert'; }, 3000);
+    el.textContent = msg;
+    el.className = 'alert show alert-' + type;
+    setTimeout(() => { el.className = 'alert'; }, 3000);
   }
 
-  /* ── ADD ISSUE ── */
+  // SAVE ISSUE
   function saveIssue() {
-    const deviceId  = document.getElementById('f-deviceId').value.trim();
-    const date      = document.getElementById('f-date').value;
-    const client    = document.getElementById('f-client').value.trim();
-    const status    = document.getElementById('f-status').value;
+    const deviceId = document.getElementById('f-deviceId').value.trim();
+    const date = document.getElementById('f-date').value;
+    const client = document.getElementById('f-client').value.trim();
+    const status = document.getElementById('f-status').value;
     const issueType = document.getElementById('f-issueType').value;
-    const issue     = document.getElementById('f-issue').value.trim();
-    const resolution= document.getElementById('f-resolution').value.trim();
-    if (!deviceId||!date||!client||!issue) {
-      showAlert('addAlert','Please fill in Device ID, Date, Client Name, and Issue.','error'); return;
+    const issue = document.getElementById('f-issue').value.trim();
+    const resolution = document.getElementById('f-resolution').value.trim();
+    if (!deviceId || !date || !client || !issue) {
+      showAlert('addAlert', 'Please fill in Device ID, Date, Client Name, and Issue.', 'error');
+      return;
     }
     issues.unshift({ id: Date.now(), deviceId, date, client, status, issueType, issue, resolution });
     saveData();
-    showAlert('addAlert','Issue saved successfully!','success');
+    showAlert('addAlert', 'Issue saved successfully!', 'success');
     clearForm();
   }
 
   function clearForm() {
-    ['f-deviceId','f-client','f-issue','f-resolution'].forEach(id=>document.getElementById(id).value='');
+    ['f-deviceId','f-client','f-issue','f-resolution'].forEach(id => document.getElementById(id).value = '');
     document.getElementById('f-date').value = today();
     document.getElementById('f-status').value = 'Open';
-    document.getElementById('f-issueType').value = allTypes()[0]||'Hardware';
+    document.getElementById('f-issueType').value = 'Hardware';
   }
 
-  /* ── EDIT ISSUE ── */
-  function updateIssue(id, data) {
-    const idx = issues.findIndex(i=>i.id===id);
-    if (idx===-1) return;
-    issues[idx] = { ...issues[idx], ...data };
-    saveData();
-  }
+  function today() { return new Date().toISOString().split('T')[0]; }
 
-  /* ── BADGE HELPERS ── */
+  // BADGE HELPERS
   const typeMap = { Hardware:'hw', Software:'sw', Network:'nw', Power:'pw', Other:'ot' };
-  function typeBadge(t) { const cls=typeMap[t]||'ot'; return `<span class="badge badge-${cls}">${esc(t||'Other')}</span>`; }
-  function statusBadge(s) { return `<span class="badge badge-${s==='Open'?'open':'resolved'}">${s}</span>`; }
+  function typeBadge(t) {
+    const cls = typeMap[t] || 'ot';
+    return `<span class="badge badge-${cls}">${esc(t||'Other')}</span>`;
+  }
+  function statusBadge(s) {
+    return `<span class="badge badge-${s==='Open'?'open':'resolved'}">${s}</span>`;
+  }
 
-  /* ── RESULT CARD with EDIT ── */
-  function resultCard(i, refreshFn) {
-    const typeOpts = allTypes().map(t=>`<option value="${esc(t)}"${i.issueType===t?' selected':''}>${esc(t)}</option>`).join('');
-    return `<div class="result-card" id="card-${i.id}">
+  // RESULT CARD
+  function resultCard(i) {
+    return `<div class="result-card">
       <div class="rc-header">
         <span class="rc-device">${esc(i.deviceId)}</span>
         <div class="rc-badges">${typeBadge(i.issueType)}${statusBadge(i.status)}</div>
@@ -689,236 +585,175 @@
       </div>
       <hr class="rc-divider">
       <div class="rc-detail"><strong>Issue reported</strong>${esc(i.issue)}</div>
-      <div class="rc-detail" style="margin-top:8px">
-        <strong>Resolution</strong>
-        ${i.resolution ? esc(i.resolution) : '<span class="no-resolution">Not resolved yet — click Edit to add resolution</span>'}
-      </div>
-      <div class="rc-actions">
-        <button class="btn btn-edit btn-sm" onclick="toggleEditCard(${i.id})">✏ Edit</button>
-        <button class="btn btn-danger btn-sm" onclick="deleteIssueAndRefresh(${i.id}, '${refreshFn}')">Delete</button>
-      </div>
-      <div class="edit-form" id="editform-${i.id}">
-        <div class="edit-grid">
-          <div class="edit-group"><label>Device ID</label><input id="e-deviceId-${i.id}" value="${esc(i.deviceId)}"></div>
-          <div class="edit-group"><label>Date</label><input type="date" id="e-date-${i.id}" value="${esc(i.date)}"></div>
-          <div class="edit-group"><label>Client</label><input id="e-client-${i.id}" value="${esc(i.client)}"></div>
-          <div class="edit-group"><label>Status</label>
-            <select id="e-status-${i.id}">
-              <option value="Open"${i.status==='Open'?' selected':''}>Open</option>
-              <option value="Resolved"${i.status==='Resolved'?' selected':''}>Resolved</option>
-            </select>
-          </div>
-          <div class="edit-group full"><label>Issue type</label>
-            <select id="e-issueType-${i.id}">${typeOpts}</select>
-          </div>
-          <div class="edit-group full"><label>Issue reported</label>
-            <textarea id="e-issue-${i.id}">${esc(i.issue)}</textarea>
-          </div>
-          <div class="edit-group full"><label>Resolution</label>
-            <textarea id="e-resolution-${i.id}" placeholder="Add resolution here...">${esc(i.resolution||'')}</textarea>
-          </div>
-        </div>
-        <div class="edit-actions">
-          <button class="btn btn-success btn-sm" onclick="saveEditCard(${i.id}, '${refreshFn}')">Save changes</button>
-          <button class="btn btn-sm" onclick="toggleEditCard(${i.id})">Cancel</button>
-        </div>
-      </div>
+      ${i.resolution ? `<div class="rc-detail" style="margin-top:8px"><strong>Resolution</strong>${esc(i.resolution)}</div>` : ''}
     </div>`;
   }
 
-  function toggleEditCard(id) {
-    const form = document.getElementById('editform-'+id);
-    if (form.classList.contains('open')) {
-      // already open — allow closing without auth
-      form.classList.remove('open');
-      return;
-    }
-    requireAuth(
-      '🔐 Edit Access Required',
-      'Enter the admin password to edit this issue.',
-      () => { form.classList.add('open'); }
-    );
-  }
-
-  function saveEditCard(id, refreshFn) {
-    const data = {
-      deviceId:   document.getElementById('e-deviceId-'+id).value.trim(),
-      date:       document.getElementById('e-date-'+id).value,
-      client:     document.getElementById('e-client-'+id).value.trim(),
-      status:     document.getElementById('e-status-'+id).value,
-      issueType:  document.getElementById('e-issueType-'+id).value,
-      issue:      document.getElementById('e-issue-'+id).value.trim(),
-      resolution: document.getElementById('e-resolution-'+id).value.trim(),
-    };
-    updateIssue(id, data);
-    if (refreshFn==='searchById') searchById();
-    else if (refreshFn==='searchByClient') searchByClient();
-    else if (refreshFn==='searchByIssue') searchByIssue();
-    else if (refreshFn==='renderAll') renderAll();
-  }
-
-  function deleteIssueAndRefresh(id, refreshFn) {
-    requireAuth(
-      '🔐 Delete Access Required',
-      'Enter the admin password to delete this issue.',
-      () => {
-        issues = issues.filter(i=>i.id!==id);
-        saveData();
-        if (refreshFn==='searchById') searchById();
-        else if (refreshFn==='searchByClient') searchByClient();
-        else if (refreshFn==='searchByIssue') searchByIssue();
-        else if (refreshFn==='renderAll') renderAll();
-      }
-    );
-  }
-
-  /* ── SEARCH BY DEVICE ID ── */
+  // SEARCH BY ID
   function searchById() {
     const q = document.getElementById('inp-searchId').value.trim().toLowerCase();
     const c = document.getElementById('res-searchId');
-    if (!q) { c.innerHTML=''; return; }
-    const res = issues.filter(i=>i.deviceId.toLowerCase().includes(q));
-    if (!res.length) { c.innerHTML=emptyState('No issues found for this device ID'); return; }
-    c.innerHTML = `<p style="font-size:12px;color:var(--text3);margin-bottom:14px;font-family:'DM Mono',monospace">${res.length} issue(s) found</p>`
-      + res.map(i=>resultCard(i,'searchById')).join('');
+    if (!q) { c.innerHTML = ''; return; }
+    const res = issues.filter(i => i.deviceId.toLowerCase().includes(q));
+    if (!res.length) { c.innerHTML = emptyState('No issues found for this device ID'); return; }
+    c.innerHTML = `<p style="font-size:12px;color:var(--text3);margin-bottom:14px;font-family:'DM Mono',monospace">${res.length} issue(s) found</p>` + res.map(resultCard).join('');
   }
 
-  /* ── SEARCH BY CLIENT ── */
+  // SEARCH BY CLIENT
   function searchByClient() {
     const q = document.getElementById('inp-searchClient').value.trim().toLowerCase();
     const c = document.getElementById('res-searchClient');
-    if (!q) { c.innerHTML=''; return; }
-    const res = issues.filter(i=>i.client.toLowerCase().includes(q));
-    if (!res.length) { c.innerHTML=emptyState('No issues found for this client'); return; }
-    c.innerHTML = `<p style="font-size:12px;color:var(--text3);margin-bottom:14px;font-family:'DM Mono',monospace">${res.length} issue(s) found</p>`
-      + res.map(i=>resultCard(i,'searchByClient')).join('');
+    if (!q) { c.innerHTML = ''; return; }
+    const res = issues.filter(i => i.client.toLowerCase().includes(q));
+    if (!res.length) { c.innerHTML = emptyState('No issues found for this client'); return; }
+    c.innerHTML = `<p style="font-size:12px;color:var(--text3);margin-bottom:14px;font-family:'DM Mono',monospace">${res.length} issue(s) found</p>` + res.map(resultCard).join('');
   }
 
-  /* ── SEARCH BY ISSUE TYPE ── */
+  // SEARCH BY ISSUE TYPE
   function searchByIssue() {
     const type = document.getElementById('inp-issueType').value;
     const text = document.getElementById('inp-issueText').value.trim().toLowerCase();
     const c = document.getElementById('res-searchIssue');
-    if (!type&&!text) { c.innerHTML=''; return; }
-    const res = issues.filter(i=>{
-      const mt = !type||i.issueType===type;
-      const mx = !text||i.issue.toLowerCase().includes(text)||i.deviceId.toLowerCase().includes(text);
-      return mt&&mx;
+    if (!type && !text) { c.innerHTML = ''; return; }
+    const res = issues.filter(i => {
+      const mt = !type || i.issueType === type;
+      const mx = !text || i.issue.toLowerCase().includes(text) || i.deviceId.toLowerCase().includes(text);
+      return mt && mx;
     });
-    if (!res.length) { c.innerHTML=emptyState('No matching issues found'); return; }
-    c.innerHTML = `<p style="font-size:12px;color:var(--text3);margin-bottom:14px;font-family:'DM Mono',monospace">${res.length} issue(s) found</p>`
-      + res.map(i=>resultCard(i,'searchByIssue')).join('');
+    if (!res.length) { c.innerHTML = emptyState('No matching issues found'); return; }
+
+    if (type && !text) {
+      // grouped view
+      const grouped = {};
+      res.forEach(i => { const k = i.issueType||'Other'; if(!grouped[k]) grouped[k]=[]; grouped[k].push(i); });
+      let html = `<p style="font-size:12px;color:var(--text3);margin-bottom:14px;font-family:'DM Mono',monospace">${res.length} device(s) with ${type} issues</p>`;
+      Object.entries(grouped).forEach(([t, items]) => {
+        html += `<div class="group-block">
+          <div class="group-head">
+            <div class="group-head-left">${typeBadge(t)}<span>${esc(t)} issues</span></div>
+            <span class="group-count">${items.length} device(s)</span>
+          </div>`;
+        items.forEach(i => {
+          html += `<div class="group-row">
+            <span class="dev">${esc(i.deviceId)}</span>
+            <span class="dt">${esc(i.date)}</span>
+            <span class="cl">${esc(i.client)}</span>
+            ${statusBadge(i.status)}
+          </div>`;
+        });
+        html += `</div>`;
+      });
+      c.innerHTML = html;
+    } else {
+      c.innerHTML = `<p style="font-size:12px;color:var(--text3);margin-bottom:14px;font-family:'DM Mono',monospace">${res.length} issue(s) found</p>` + res.map(resultCard).join('');
+    }
   }
 
-  /* ── ALL ISSUES TABLE with INLINE EDIT ── */
-  let editingId = null;
-
+  // ALL ISSUES TABLE
   function renderAll() {
-    const q  = (document.getElementById('f-filterText')?.value||'').toLowerCase();
-    const st = document.getElementById('f-filterStatus')?.value||'';
-    const tp = document.getElementById('f-filterType')?.value||'';
-    const filtered = issues.filter(i=>{
-      const mq = !q||i.deviceId.toLowerCase().includes(q)||i.client.toLowerCase().includes(q)||i.issue.toLowerCase().includes(q);
-      return mq && (!st||i.status===st) && (!tp||i.issueType===tp);
+    const q = (document.getElementById('f-filterText')?.value || '').toLowerCase();
+    const st = document.getElementById('f-filterStatus')?.value || '';
+    const tp = document.getElementById('f-filterType')?.value || '';
+    const filtered = issues.filter(i => {
+      const mq = !q || i.deviceId.toLowerCase().includes(q) || i.client.toLowerCase().includes(q) || i.issue.toLowerCase().includes(q);
+      const ms = !st || i.status === st;
+      const mt = !tp || i.issueType === tp;
+      return mq && ms && mt;
     });
     const wrap = document.getElementById('all-table-wrap');
-    if (!filtered.length) { wrap.innerHTML=emptyState('No issues match your filters'); return; }
-
-    const typeOpts = (cur) => allTypes().map(t=>`<option value="${esc(t)}"${cur===t?' selected':''}>${esc(t)}</option>`).join('');
-
+    if (!filtered.length) { wrap.innerHTML = emptyState('No issues match your filters'); return; }
     wrap.innerHTML = `<div class="table-wrap"><table>
       <thead><tr>
-        <th>Device ID</th><th>Date</th><th>Client</th><th>Type</th><th>Issue</th><th>Resolution</th><th>Status</th><th>Actions</th>
+        <th>Device ID</th><th>Date</th><th>Client</th><th>Type</th><th>Issue</th><th>Resolution</th><th>Status</th><th></th>
       </tr></thead>
-      <tbody>
-        ${filtered.map(i => {
-          if (editingId === i.id) {
-            return `<tr class="edit-row" id="row-${i.id}">
-              <td><input id="te-deviceId" value="${esc(i.deviceId)}"></td>
-              <td><input type="date" id="te-date" value="${esc(i.date)}"></td>
-              <td><input id="te-client" value="${esc(i.client)}"></td>
-              <td><select id="te-issueType">${typeOpts(i.issueType)}</select></td>
-              <td><textarea id="te-issue">${esc(i.issue)}</textarea></td>
-              <td><textarea id="te-resolution" placeholder="Add resolution...">${esc(i.resolution||'')}</textarea></td>
-              <td><select id="te-status"><option${i.status==='Open'?' selected':''}>Open</option><option${i.status==='Resolved'?' selected':''}>Resolved</option></select></td>
-              <td style="white-space:nowrap">
-                <button class="btn btn-success btn-sm" style="margin-bottom:4px" onclick="saveTableEdit(${i.id})">Save</button><br>
-                <button class="btn btn-sm" onclick="cancelTableEdit()">Cancel</button>
-              </td>
-            </tr>`;
-          }
-          return `<tr>
-            <td class="device-col">${esc(i.deviceId)}</td>
-            <td>${esc(i.date)}</td>
-            <td>${esc(i.client)}</td>
-            <td>${typeBadge(i.issueType)}</td>
-            <td class="issue-col" title="${esc(i.issue)}">${esc(i.issue)}</td>
-            <td class="issue-col" title="${esc(i.resolution||'')}">
-              ${i.resolution ? esc(i.resolution) : '<span style="color:var(--text3);font-style:italic;font-size:12px">Pending</span>'}
-            </td>
-            <td>${statusBadge(i.status)}</td>
-            <td style="white-space:nowrap">
-              <button class="btn btn-edit btn-sm" style="margin-right:4px" onclick="startTableEdit(${i.id})">✏ Edit</button>
-              <button class="btn btn-danger btn-sm" onclick="deleteIssueAndRefresh(${i.id},'renderAll')">Delete</button>
-            </td>
-          </tr>`;
-        }).join('')}
-      </tbody>
+      <tbody>${filtered.map(i => `<tr>
+        <td class="device-col">${esc(i.deviceId)}</td>
+        <td>${esc(i.date)}</td>
+        <td>${esc(i.client)}</td>
+        <td>${typeBadge(i.issueType)}</td>
+        <td class="issue-col" title="${esc(i.issue)}">${esc(i.issue)}</td>
+        <td class="issue-col" title="${esc(i.resolution||'')}">${esc(i.resolution||'—')}</td>
+        <td>${statusBadge(i.status)}</td>
+        <td><button class="btn btn-danger btn-sm" onclick="deleteIssue(${i.id})">Delete</button></td>
+      </tr>`).join('')}</tbody>
     </table></div>`;
   }
 
-  function startTableEdit(id) {
-    requireAuth(
-      '🔐 Edit Access Required',
-      'Enter the admin password to edit this issue.',
-      () => { editingId=id; renderAll(); }
-    );
-  }
-  function cancelTableEdit() { editingId=null; renderAll(); }
-
-  function saveTableEdit(id) {
-    updateIssue(id, {
-      deviceId:   document.getElementById('te-deviceId').value.trim(),
-      date:       document.getElementById('te-date').value,
-      client:     document.getElementById('te-client').value.trim(),
-      issueType:  document.getElementById('te-issueType').value,
-      issue:      document.getElementById('te-issue').value.trim(),
-      resolution: document.getElementById('te-resolution').value.trim(),
-      status:     document.getElementById('te-status').value,
-    });
-    editingId=null; renderAll();
+  function deleteIssue(id) {
+    if (!confirm('Delete this issue?')) return;
+    issues = issues.filter(i => i.id !== id);
+    saveData(); renderAll();
   }
 
-  /* ── HELPERS ── */
-  function today() { return new Date().toISOString().split('T')[0]; }
-  function emptyState(msg) { return `<div class="empty-state"><div class="empty-icon">◌</div><p>${msg}</p></div>`; }
-  function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  // EMPTY STATE
+  function emptyState(msg) {
+    return `<div class="empty-state"><div class="empty-icon">◌</div><p>${msg}</p></div>`;
+  }
 
-  /* ── EXPORT ── */
+  // ESCAPE
+  function esc(s) {
+    return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  // EXPORT CSV
   function exportCSV() {
-    const h = ['Device ID','Date','Client Name','Issue Type','Issue Reported','Resolution','Status'];
-    const rows = issues.map(i=>[i.deviceId,i.date,i.client,i.issueType,i.issue,i.resolution,i.status].map(v=>'"'+String(v||'').replace(/"/g,'""')+'"'));
-    dl(new Blob([[h.join(','),...rows.map(r=>r.join(','))].join('\n')],{type:'text/csv'}), 'issues.csv');
+    const headers = ['Device ID','Date','Client Name','Issue Type','Issue Reported','Resolution','Status'];
+    const rows = issues.map(i => [i.deviceId,i.date,i.client,i.issueType,i.issue,i.resolution,i.status].map(v => '"'+String(v||'').replace(/"/g,'""')+'"'));
+    const csv = [headers.join(','), ...rows.map(r=>r.join(','))].join('\n');
+    dl(new Blob([csv],{type:'text/csv'}), 'issues.csv');
   }
-  function exportJSON() { dl(new Blob([JSON.stringify(issues,null,2)],{type:'application/json'}), 'issues-backup.json'); }
+
+  // EXPORT JSON
+  function exportJSON() {
+    dl(new Blob([JSON.stringify(issues,null,2)],{type:'application/json'}), 'issues-backup.json');
+  }
+
+  // EXPORT PDF
   function exportPDF() {
     const rows = issues.map(i=>`<tr><td>${esc(i.deviceId)}</td><td>${esc(i.date)}</td><td>${esc(i.client)}</td><td>${esc(i.issueType)}</td><td>${esc(i.issue)}</td><td>${esc(i.resolution||'—')}</td><td>${i.status}</td></tr>`).join('');
-    const w=window.open('','_blank');
-    w.document.write(`<!DOCTYPE html><html><head><title>Issues</title><style>body{font-family:sans-serif;font-size:12px;padding:24px}table{width:100%;border-collapse:collapse}th{background:#f5f5f5;padding:8px;text-align:left;border-bottom:2px solid #ddd;font-size:11px}td{padding:8px;border-bottom:1px solid #eee;vertical-align:top}</style></head><body>
-    <h2 style="margin-bottom:4px">Issue Tracker Report</h2>
-    <p style="color:#666;font-size:11px;margin-bottom:20px">Generated: ${new Date().toLocaleString()} · Total: ${issues.length}</p>
-    <table><thead><tr><th>Device ID</th><th>Date</th><th>Client</th><th>Type</th><th>Issue</th><th>Resolution</th><th>Status</th></tr></thead><tbody>${rows}</tbody></table></body></html>`);
+    const w = window.open('','_blank');
+    w.document.write(`<!DOCTYPE html><html><head><title>Issues Report</title><style>
+      body{font-family:sans-serif;font-size:12px;padding:24px;color:#111}
+      h2{margin-bottom:4px;font-size:18px}
+      .meta{color:#666;font-size:11px;margin-bottom:20px}
+      table{width:100%;border-collapse:collapse}
+      th{background:#f5f5f5;padding:8px 10px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:0.05em;border-bottom:2px solid #ddd}
+      td{padding:8px 10px;border-bottom:1px solid #eee;vertical-align:top}
+      tr:last-child td{border-bottom:none}
+    </style></head><body>
+    <h2>Issue Tracker — Report</h2>
+    <div class="meta">Generated: ${new Date().toLocaleString()} · Total issues: ${issues.length}</div>
+    <table><thead><tr><th>Device ID</th><th>Date</th><th>Client</th><th>Type</th><th>Issue</th><th>Resolution</th><th>Status</th></tr></thead>
+    <tbody>${rows}</tbody></table></body></html>`);
     w.document.close(); w.print();
   }
-  function restoreJSON() {
-    const file=document.getElementById('restoreFile').files[0]; if(!file) return;
-    const r=new FileReader();
-    r.onload=e=>{ try { const d=JSON.parse(e.target.result); if(Array.isArray(d)){issues=d;saveData();alert('Restored '+d.length+' issues!');renderAll();} else alert('Invalid file.'); } catch{alert('Could not read file.');} };
-    r.readAsText(file);
-  }
-  function dl(blob,name) { const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name; a.click(); }
 
-  /* ── BOOT ── */
+  // RESTORE JSON
+  function restoreJSON() {
+    const file = document.getElementById('restoreFile').files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      try {
+        const data = JSON.parse(e.target.result);
+        if (Array.isArray(data)) {
+          issues = data; saveData();
+          alert('Restored ' + data.length + ' issues successfully!');
+          renderAll();
+        } else { alert('Invalid backup file.'); }
+      } catch(err) { alert('Could not read file.'); }
+    };
+    reader.readAsText(file);
+  }
+
+  // DOWNLOAD HELPER
+  function dl(blob, name) {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = name; a.click();
+  }
+
+  // INIT
   document.getElementById('f-date').value = today();
   loadData();
 </script>
