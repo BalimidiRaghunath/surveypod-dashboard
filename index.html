@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Issue Tracker</title>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -948,11 +949,13 @@
   const GD_CLIENT_ID   = '498819120992-tp21nkg5dd77aicdsd9ro96ro5bdu3v3.apps.googleusercontent.com';
   const GD_SCOPE       = 'https://www.googleapis.com/auth/drive.file';
   const GD_FOLDER_NAME = 'SurveyPod Issues Data';
-  const GD_FILE_NAME   = 'surveypod_issues.json';
+  const GD_FILE_NAME   = 'surveypod_issues.xlsx';
+  const GD_META_NAME   = 'surveypod_meta.json';
 
   let gdAccessToken  = null;
   let gdFolderId     = null;
   let gdFileId       = null;
+  let gdMetaFileId   = null;
   let gdSyncing      = false;
   let gdTokenClient  = null;
   let gdLastSynced   = null;
@@ -1017,10 +1020,11 @@
   function handleSyncBtn() {
     if (gdAccessToken) {
       // Disconnect
-      gdAccessToken = null; gdFolderId = null; gdFileId = null;
+      gdAccessToken = null; gdFolderId = null; gdFileId = null; gdMetaFileId = null;
       localStorage.removeItem('gd_access_token');
       localStorage.removeItem('gd_folder_id');
       localStorage.removeItem('gd_file_id');
+      localStorage.removeItem('gd_meta_file_id');
       setSyncStatus('', 'Not connected to Google Drive');
     } else {
       gdTokenClient.requestAccessToken({ prompt: '' });
@@ -1044,6 +1048,36 @@
     return r.json();
   }
 
+  /* ── Build XLSX blob from issues array ── */
+  function buildXlsx() {
+    const headers = ['ID','Device ID','Date','Client Name','Issue Type','Issue Reported','Resolution','Status'];
+    const rows = issues.map(i => [
+      i.id, i.deviceId, i.date, i.client, i.issueType, i.issue, i.resolution||'', i.status
+    ]);
+    const ws = XLSX.utils.aoa_to_sheet([headers, ...rows]);
+    // Column widths
+    ws['!cols'] = [8,14,12,18,14,40,40,10].map(w=>({wch:w}));
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Issues');
+    return XLSX.write(wb, { bookType:'xlsx', type:'array' });
+  }
+
+  /* ── Upload binary (xlsx) to Drive ── */
+  async function uploadXlsx(fileId, xlsxArray) {
+    const blob = new Blob([xlsxArray], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    const r = await fetch(`https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=media`, {
+      method: 'PATCH',
+      headers: {
+        'Authorization': 'Bearer ' + gdAccessToken,
+        'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      },
+      body: blob
+    });
+    if (!r.ok) throw new Error('Upload error ' + r.status);
+    return r.json();
+  }
+
+  /* ── Upload JSON meta ── */
   async function uploadContent(fileId, content) {
     const r = await fetch(`https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=media`, {
       method: 'PATCH',
@@ -1054,10 +1088,38 @@
     return r.json();
   }
 
+  /* ── Create new xlsx file in Drive ── */
+  async function createXlsxFile(folderId, name, xlsxArray) {
+    const blob = new Blob([xlsxArray], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    // Multipart upload: metadata + binary
+    const boundary = 'boundary_surveypod';
+    const metaPart = JSON.stringify({ name, parents: [folderId], mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    const bodyParts = [
+      `--${boundary}\r\nContent-Type: application/json\r\n\r\n${metaPart}\r\n`,
+      `--${boundary}\r\nContent-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\r\n\r\n`
+    ];
+    const encoder = new TextEncoder();
+    const part1 = encoder.encode(bodyParts[0]);
+    const part2 = encoder.encode(bodyParts[1]);
+    const ending = encoder.encode(`\r\n--${boundary}--`);
+    const combined = new Uint8Array(part1.length + part2.length + xlsxArray.length + ending.length);
+    combined.set(part1, 0);
+    combined.set(part2, part1.length);
+    combined.set(new Uint8Array(xlsxArray), part1.length + part2.length);
+    combined.set(ending, part1.length + part2.length + xlsxArray.length);
+    const r = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + gdAccessToken, 'Content-Type': `multipart/related; boundary=${boundary}` },
+      body: combined
+    });
+    if (!r.ok) throw new Error('Create xlsx error ' + r.status);
+    const data = await r.json();
+    return data.id;
+  }
+
+  /* ── Create JSON meta file ── */
   async function createFile(folderId, name, content) {
-    // 1. Create metadata
     const meta = await driveAPI('/files', 'POST', { name, parents: [folderId], mimeType: 'application/json' });
-    // 2. Upload content
     await uploadContent(meta.id, content);
     return meta.id;
   }
@@ -1065,20 +1127,20 @@
   /* ── Setup: find/create folder & file ── */
   async function setupDriveFolder() {
     try {
-      // Try cached IDs first
-      const cachedFolder = localStorage.getItem('gd_folder_id');
-      const cachedFile   = localStorage.getItem('gd_file_id');
+      const cachedFolder  = localStorage.getItem('gd_folder_id');
+      const cachedFile    = localStorage.getItem('gd_file_id');
+      const cachedMeta    = localStorage.getItem('gd_meta_file_id');
 
-      if (cachedFolder && cachedFile) {
-        // Verify they still exist
+      if (cachedFolder && cachedFile && cachedMeta) {
         try {
           await driveAPI('/files/' + cachedFolder, 'GET', null, { fields: 'id,trashed' });
-          await driveAPI('/files/' + cachedFile, 'GET', null, { fields: 'id,trashed' });
-          gdFolderId = cachedFolder;
-          gdFileId   = cachedFile;
+          await driveAPI('/files/' + cachedFile,   'GET', null, { fields: 'id,trashed' });
+          gdFolderId   = cachedFolder;
+          gdFileId     = cachedFile;
+          gdMetaFileId = cachedMeta;
           await pullFromGDrive();
           return;
-        } catch(e) { /* stale cache, fall through */ }
+        } catch(e) { /* stale cache */ }
       }
 
       setSyncStatus('syncing', 'Setting up folder in Google Drive...');
@@ -1088,33 +1150,44 @@
         q: `name='${GD_FOLDER_NAME}' and mimeType='application/vnd.google-apps.folder' and trashed=false`,
         fields: 'files(id,name)'
       });
-
       if (folderSearch.files && folderSearch.files.length > 0) {
         gdFolderId = folderSearch.files[0].id;
       } else {
         setSyncStatus('syncing', 'Creating folder "SurveyPod Issues Data"...');
-        const folder = await driveAPI('/files', 'POST', {
-          name: GD_FOLDER_NAME,
-          mimeType: 'application/vnd.google-apps.folder'
-        });
+        const folder = await driveAPI('/files', 'POST', { name: GD_FOLDER_NAME, mimeType: 'application/vnd.google-apps.folder' });
         gdFolderId = folder.id;
       }
       localStorage.setItem('gd_folder_id', gdFolderId);
 
-      // Find or create JSON file
-      const fileSearch = await driveAPI('/files', 'GET', null, {
+      // Find or create Excel file
+      const xlsxSearch = await driveAPI('/files', 'GET', null, {
         q: `name='${GD_FILE_NAME}' and '${gdFolderId}' in parents and trashed=false`,
-        fields: 'files(id,name,modifiedTime)'
+        fields: 'files(id,name)'
       });
+      if (xlsxSearch.files && xlsxSearch.files.length > 0) {
+        gdFileId = xlsxSearch.files[0].id;
+      } else {
+        setSyncStatus('syncing', 'Creating Excel file...');
+        gdFileId = await createXlsxFile(gdFolderId, GD_FILE_NAME, buildXlsx());
+      }
+      localStorage.setItem('gd_file_id', gdFileId);
 
-      if (fileSearch.files && fileSearch.files.length > 0) {
-        gdFileId = fileSearch.files[0].id;
-        localStorage.setItem('gd_file_id', gdFileId);
+      // Find or create meta JSON file
+      const metaSearch = await driveAPI('/files', 'GET', null, {
+        q: `name='${GD_META_NAME}' and '${gdFolderId}' in parents and trashed=false`,
+        fields: 'files(id,name)'
+      });
+      if (metaSearch.files && metaSearch.files.length > 0) {
+        gdMetaFileId = metaSearch.files[0].id;
+      } else {
+        gdMetaFileId = await createFile(gdFolderId, GD_META_NAME, { customTypes, hiddenBaseTypes });
+      }
+      localStorage.setItem('gd_meta_file_id', gdMetaFileId);
+
+      // If xlsx already existed, pull from it
+      if (xlsxSearch.files && xlsxSearch.files.length > 0) {
         await pullFromGDrive();
       } else {
-        setSyncStatus('syncing', 'Creating data file...');
-        gdFileId = await createFile(gdFolderId, GD_FILE_NAME, { issues, customTypes, hiddenBaseTypes });
-        localStorage.setItem('gd_file_id', gdFileId);
         setSyncStatus('connected', 'Synced to Google Drive ✓');
         gdLastSynced = new Date();
       }
@@ -1124,27 +1197,49 @@
     }
   }
 
-  /* ── Pull data FROM Drive ── */
+  /* ── Pull data FROM Drive (xlsx) ── */
   async function pullFromGDrive() {
     try {
       setSyncStatus('syncing', 'Loading data from Google Drive...');
+
+      // Pull Excel file
       const r = await fetch(`https://www.googleapis.com/drive/v3/files/${gdFileId}?alt=media`, {
         headers: { 'Authorization': 'Bearer ' + gdAccessToken }
       });
       if (!r.ok) throw new Error('Fetch failed');
-      const data = await r.json();
-      if (Array.isArray(data.issues)) {
-        issues = data.issues;
-        saveData();
+      const arrayBuffer = await r.arrayBuffer();
+      const wb = XLSX.read(new Uint8Array(arrayBuffer), { type: 'array' });
+      const ws = wb.Sheets[wb.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json(ws, { header: 1 });
+      // rows[0] = headers, rows[1+] = data
+      if (rows.length > 1) {
+        issues = rows.slice(1).filter(r => r[0]).map(r => ({
+          id:         r[0] || Date.now(),
+          deviceId:   r[1] || '',
+          date:       r[2] || '',
+          client:     r[3] || '',
+          issueType:  r[4] || 'Hardware',
+          issue:      r[5] || '',
+          resolution: r[6] || '',
+          status:     r[7] || 'Open'
+        }));
+        saveDataLocal();
       }
-      if (Array.isArray(data.customTypes)) {
-        customTypes = data.customTypes;
-        saveTypes();
+
+      // Pull meta JSON
+      if (gdMetaFileId) {
+        try {
+          const mr = await fetch(`https://www.googleapis.com/drive/v3/files/${gdMetaFileId}?alt=media`, {
+            headers: { 'Authorization': 'Bearer ' + gdAccessToken }
+          });
+          if (mr.ok) {
+            const meta = await mr.json();
+            if (Array.isArray(meta.customTypes))    { customTypes = meta.customTypes; saveTypes(); }
+            if (Array.isArray(meta.hiddenBaseTypes)) { hiddenBaseTypes = meta.hiddenBaseTypes; saveHiddenBaseTypes(); }
+          }
+        } catch(e) { /* meta pull failed, not critical */ }
       }
-      if (Array.isArray(data.hiddenBaseTypes)) {
-        hiddenBaseTypes = data.hiddenBaseTypes;
-        saveHiddenBaseTypes();
-      }
+
       updateStats();
       refreshTypeSelects();
       renderAll();
@@ -1156,13 +1251,18 @@
     }
   }
 
-  /* ── Push data TO Drive ── */
+  /* ── Push data TO Drive (xlsx) ── */
   async function pushToGDrive() {
     if (!gdAccessToken || !gdFileId || gdSyncing) return;
     gdSyncing = true;
     setSyncStatus('syncing', 'Saving to Google Drive...');
     try {
-      await uploadContent(gdFileId, { issues, customTypes, hiddenBaseTypes });
+      // Push Excel
+      await uploadXlsx(gdFileId, buildXlsx());
+      // Push meta JSON
+      if (gdMetaFileId) {
+        await uploadContent(gdMetaFileId, { customTypes, hiddenBaseTypes });
+      }
       gdLastSynced = new Date();
       setSyncStatus('connected', `Synced ✓ — last sync ${gdLastSynced.toLocaleTimeString()}`);
     } catch(e) {
@@ -1173,9 +1273,7 @@
   }
 
   /* ── Patch saveData / saveTypes / saveHiddenBaseTypes to also push ── */
-  const _origSaveData  = saveData;
-  const _origSaveTypes = saveTypes;
-  const _origSaveHidden= saveHiddenBaseTypes;
+  function saveDataLocal() { localStorage.setItem(STORAGE_KEY, JSON.stringify(issues)); updateStats(); }
 
   // Override saveData
   function saveData() {
